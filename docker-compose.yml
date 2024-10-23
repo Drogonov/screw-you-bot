@@ -1,5 +1,12 @@
 version: '3.8'
 services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 8080:8080
   dev-db:
     image: postgres:13
     ports:

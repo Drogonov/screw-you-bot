@@ -58,10 +58,7 @@ Thumbs.db
 src/app/homepage/pages/**/*.html
 
 # dotenv environment variable files
-.env
-.env.dev
-.env.test
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+*.env
+
+# Except specific ones
+!example.env
