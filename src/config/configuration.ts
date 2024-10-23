@@ -1,15 +1,21 @@
 export const configuration = () => ({
-    NODE_ENV: process.env.NODE_ENV,
-    port: parseInt(process.env.PORT, 10) || 3001,
+    env: process.env.NODE_ENV,
+    db: {
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        name: process.env.POSTGRES_DB,
+        port: process.env.POSTGRES_DB_PORT,
+        url: process.env.DATABASE_URL,
+
+    },
+    app: {
+        port: process.env.APP_PORT,
+        telegramToken: process.env.TELEGRAM_BOT_TOKEN
+    },
     jwt: {
         secret: process.env.JWT_SECRET
     },
-    db: {
-        DATABASE_URL: process.env.DATABASE_URL,
-    },
-    telegram: {
-        TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
-        TOKEN: process.env.TOKEN
-
+    external: {
+        port: process.env.SERVER_PORT
     }
 });
