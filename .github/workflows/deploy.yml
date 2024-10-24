@@ -23,5 +23,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
           cd /path/to/your/app
           git pull origin main
-          docker-compose --env-file /path/to/your/server/env/file up --build -d
+          docker-compose --env-file ./src/config/env/production.env up --build -d
         EOF
