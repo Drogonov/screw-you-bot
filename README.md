@@ -26,7 +26,7 @@ npx prisma generate && npx prisma db push
 npx prisma studio
 ```
 
-- Create you .env files with config
+- Create you .env files with config at src/config/env
 
 - Run the Bot
 ```
