@@ -15,6 +15,7 @@ RUN npm install -g @nestjs/cli
 COPY --chown=node:node package*.json ./
 
 # Install project dependencies
+RUN npm install
 RUN npm ci --include=dev
 
 # Bundle app source
