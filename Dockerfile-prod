@@ -12,8 +12,8 @@ ARG DB_HOST=db-prod
 # Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
-# Install app dependencies (only production dependencies will be installed)
-RUN npm ci --only=production
+# Install dev dependencies to ensure build tools are available
+RUN npm ci
 
 # Copy the rest of the application code
 COPY . .
@@ -32,9 +32,10 @@ WORKDIR /usr/src/app
 
 # Copy necessary files from the builder stage
 COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/prisma ./prisma
-COPY --from=builder /usr/src/app/package.json ./
+COPY --from=builder /usr/src/app/config ./config
 
 # Install OpenSSL for secure connections
 RUN apk add --no-cache openssl
@@ -45,6 +46,6 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-# Utilizing a shell to dynamically check the DB hostname and port
-# CMD ["sh", "-c", "dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 60m npm run start:dev && npm run prisma:generate-dev & npm run prisma:db-push-dev"]
-CMD ["sh", "-c", "npm run prisma:generate-prod & npm run prisma:db-push-prod & dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 60m npm run start:prod"]
+# Ensure the database is ready before starting the application
+CMD ["sh", "-c", \
+     "npm run prisma:generate-prod && npm run prisma:db-push-prod && dockerize -wait tcp://${DB_HOST}:${DB_PORT} -timeout 60s && npm run start:prod"]
