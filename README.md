@@ -35,7 +35,7 @@ Setup prisma and prisma studio
 npm run prisma:generate-dev
 ```
 ```
-npm run prisma:db-push-dev
+npm run prisma:db-push-dev-local
 ```
 ```
 npm run prisma:studio-dev

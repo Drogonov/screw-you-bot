@@ -1,5 +1,5 @@
-# Use the official Node.js 16 image as a base image
-FROM node:20-alpine
+# Stage 1: Build Stage
+FROM node:20-alpine as builder
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -9,26 +9,34 @@ ARG NODE_ENV=production
 ARG DB_PORT=5432
 ARG DB_HOST=db-prod
 
-# Print ARGS for debugging
-# RUN echo "NODE_ENV is ${NODE_ENV}" && echo "DB_HOST is ${DB_HOST}" && echo "DB_PORT is ${DB_PORT}"
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
-# Copy the package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Install app dependencies (only production dependencies will be installed)
+RUN npm ci --only=production
 
-# Install the project dependencies
-RUN npm install
-RUN npm install prisma @prisma/client
-
-# Copy the rest of the application code to the working directory
+# Copy the rest of the application code
 COPY . .
 
-# Copy the prisma schema
+# Copy Prisma schema
 COPY prisma ./prisma
 
 # Build the application
 RUN npm run build
 
-# Install openssl for secure connections
+# Stage 2: Production Stage
+FROM node:20-alpine
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy necessary files from the builder stage
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/package.json ./
+
+# Install OpenSSL for secure connections
 RUN apk add --no-cache openssl
 
 # Install dockerize for service health checks
