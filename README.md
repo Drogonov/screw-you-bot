@@ -32,7 +32,7 @@ Setup prisma and prisma studio
 (Be carefull because when you dont use container you need to change db-host to localhost in all prisma links. It is not best solvation but it works for me)
 
 ```
-npm run prisma:generate-dev
+npm run prisma:generate-dev-local
 ```
 ```
 npm run prisma:db-push-dev-local
