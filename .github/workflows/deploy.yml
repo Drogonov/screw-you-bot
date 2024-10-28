@@ -1,27 +1,27 @@
-name: Deploy to VPS
+# name: Deploy to VPS
 
-on:
-  push:
-    branches:
-      - main  # Specify the branch you want to trigger the deploy
+# on:
+#   push:
+#     branches:
+#       - main  # Specify the branch you want to trigger the deploy
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
+#     - name: Setup SSH
+#       uses: webfactory/ssh-agent@v0.9.0
+#       with:
+#         ssh-private-key: ${{ secrets.SSH_KEY }}
 
-    - name: Run SSH Commands
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-          cd ${{ secrets.REPO_PATH }}
-          git pull origin main
-          docker-compose --env-file ${{ secrets.ENV_FILE_PATH }} up --build -d
-        EOF
+#     - name: Run SSH Commands
+#       run: |
+#         ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+#           cd ${{ secrets.REPO_PATH }}
+#           git pull origin main
+#           docker-compose --env-file ${{ secrets.ENV_FILE_PATH }} up --build -d
+#         EOF
