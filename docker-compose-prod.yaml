@@ -17,7 +17,7 @@ services:
     ports:
       - "${SERVER_PORT}:${APP_PORT}"
     depends_on:
-      - db-dev
+      - db-prod
 
   db-prod:
     image: postgres:13
